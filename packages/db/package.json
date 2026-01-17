@@ -2,9 +2,21 @@
   "name": "db",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "rm -rf dist",
+    "test": "echo \"no tests yet\""
   },
   "keywords": [],
   "author": "",
@@ -17,6 +29,7 @@
   "devDependencies": {
     "@types/node": "^25.0.9",
     "@types/pg": "^8.16.0",
-    "drizzle-kit": "^0.31.8"
+    "drizzle-kit": "^0.31.8",
+    "typescript": "^5.9.3"
   }
 }
