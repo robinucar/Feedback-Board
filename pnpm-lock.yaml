@@ -14,6 +14,9 @@ importers:
 
   apps/api:
     dependencies:
+      db:
+        specifier: workspace:^
+        version: link:../../packages/db
       express:
         specifier: ^5.2.1
         version: 5.2.1
