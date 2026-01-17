@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { z } from "zod";
-import { createFeedback, type CreateFeedbackInput } from "db";
+import { createFeedback, type CreateFeedbackInput, listFeedback } from "db";
 
 const router = Router();
 
@@ -14,6 +14,15 @@ router.post("/", async (req, res, next) => {
     const input = CreateFeedbackSchema.parse(req.body);
     const created = await createFeedback(input);
     res.status(201).json(created);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get("/", async (_req, res, next) => {
+  try {
+    const items = await listFeedback();
+    res.status(200).json({ items });
   } catch (error) {
     next(error);
   }
