@@ -16,7 +16,8 @@
   "packageManager": "pnpm@10.8.0",
   "dependencies": {
     "db": "workspace:^",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "zod": "^4.3.5"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
