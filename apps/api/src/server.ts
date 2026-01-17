@@ -1,4 +1,7 @@
 import express from "express";
+import { validateEnv } from "./env";
+
+validateEnv();
 
 const app = express();
 
