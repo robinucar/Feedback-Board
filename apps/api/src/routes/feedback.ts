@@ -1,6 +1,8 @@
 import { Router } from "express";
 import { z } from "zod";
-import { createFeedback, type CreateFeedbackInput, listFeedback } from "db";
+import { createFeedback, type CreateFeedbackInput, listFeedback, updateFeedbackById,
+  type UpdateFeedbackInput } from "db";
+import { NotFoundError } from "../errors";
 
 const router = Router();
 
@@ -8,6 +10,15 @@ const CreateFeedbackSchema: z.ZodType<CreateFeedbackInput> = z.object({
   title: z.string().min(1).max(200),
   message: z.string().min(1).max(2000),
 });
+
+const UpdateFeedbackSchema: z.ZodType<UpdateFeedbackInput> = z
+  .object({
+    title: z.string().min(1).max(200).optional(),
+    message: z.string().min(1).max(2000).optional(),
+  })
+  .refine((data) => Object.keys(data).length > 0, {
+    message: "At least one field must be provided",
+  });
 
 router.post("/", async (req, res, next) => {
   try {
@@ -23,6 +34,23 @@ router.get("/", async (_req, res, next) => {
   try {
     const items = await listFeedback();
     res.status(200).json({ items });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.patch("/:id", async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const input = UpdateFeedbackSchema.parse(req.body);
+
+    const updated = await updateFeedbackById(id, input);
+
+    if (!updated) {
+      return next(new NotFoundError("Feedback not found"));
+    }
+
+    res.status(200).json(updated);
   } catch (error) {
     next(error);
   }
