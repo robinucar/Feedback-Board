@@ -38,8 +38,11 @@ export const FeedbackCreatePage = () => {
 
       <form onSubmit={handleSubmit} className="space-y-3">
         <div>
-          <label className="block text-sm mb-1">Title</label>
+          <label htmlFor="title" className="block text-sm mb-1">
+            Title
+          </label>
           <input
+            id="title"
             className="w-full rounded-md bg-white/5 border border-white/10 px-3 py-2"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
@@ -48,8 +51,11 @@ export const FeedbackCreatePage = () => {
         </div>
 
         <div>
-          <label className="block text-sm mb-1">Message</label>
+          <label htmlFor="message" className="block text-sm mb-1">
+            Message
+          </label>
           <textarea
+            id="message"
             className="w-full rounded-md bg-white/5 border border-white/10 px-3 py-2"
             rows={4}
             value={message}
