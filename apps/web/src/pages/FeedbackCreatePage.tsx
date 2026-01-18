@@ -1,28 +1,32 @@
 import { useState } from "react"
-import { createFeedback } from "../lib/feedback"
+import { trpc } from "../lib/trpc"
 
 export const FeedbackCreatePage = () => {
   const [title, setTitle] = useState("")
   const [message, setMessage] = useState("")
-  const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setError(null)
+  const utils = trpc.useUtils()
 
-    try {
-      await createFeedback({ title, message })
+  const createFeedbackMutation = trpc.feedback.create.useMutation({
+    onSuccess: () => {
+      utils.feedback.list.invalidate()
       setSuccess(true)
       setTitle("")
       setMessage("")
-    } catch {
+    },
+    onError: () => {
       setError("Failed to create feedback")
-    } finally {
-      setLoading(false)
-    }
+    },
+  })
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    setError(null)
+    setSuccess(false)
+
+    createFeedbackMutation.mutate({ title, message })
   }
 
   return (
@@ -53,10 +57,10 @@ export const FeedbackCreatePage = () => {
 
         <button
           type="submit"
-          disabled={loading}
+          disabled={createFeedbackMutation.isPending}
           className="rounded-md bg-emerald-600 px-4 py-2 text-sm font-semibold disabled:opacity-50"
         >
-          {loading ? "Saving..." : "Create"}
+          {createFeedbackMutation.isPending ? "Saving..." : "Create"}
         </button>
       </form>
 
@@ -66,11 +70,7 @@ export const FeedbackCreatePage = () => {
         </p>
       )}
 
-      {error && (
-        <p className="text-sm text-red-400">
-          {error}
-        </p>
-      )}
+      {error && <p className="text-sm text-red-400">{error}</p>}
     </div>
   )
 }
