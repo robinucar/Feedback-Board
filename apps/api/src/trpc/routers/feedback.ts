@@ -1,6 +1,6 @@
 import { z } from "zod"
 import { router, publicProcedure } from "../router"
-import { createFeedback, listFeedback, updateFeedbackById } from "db"
+import { createFeedback, listFeedback, updateFeedbackById, deleteFeedbackById } from "db"
 
 export const feedbackRouter = router({
   list: publicProcedure.query(async () => {
@@ -31,5 +31,16 @@ export const feedbackRouter = router({
         title: input.title,
         message: input.message,
       })
+    }),
+
+    delete: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      await deleteFeedbackById(input.id)
+      return { success: true }
     }),
 })
