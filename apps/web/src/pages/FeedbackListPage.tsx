@@ -1,33 +1,17 @@
-import { useEffect, useState } from "react"
-import { fetchFeedbackList, type Feedback } from "../lib/feedback"
+import { trpc } from "../lib/trpc"
 
 export const FeedbackListPage = () => {
-  const [items, setItems] = useState<Feedback[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const { data, isLoading, error } = trpc.feedback.list.useQuery()
 
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const data = await fetchFeedbackList()
-        setItems(data)
-      } catch (err) {
-        setError("Failed to load feedback")
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    load()
-  }, [])
-
-  if (loading) {
+  if (isLoading) {
     return <p className="text-white/70">Loading...</p>
   }
 
   if (error) {
-    return <p className="text-red-400">{error}</p>
+    return <p className="text-red-400">{error.message}</p>
   }
+
+  const items = data ?? []
 
   if (items.length === 0) {
     return <p className="text-white/70">No feedback yet.</p>
