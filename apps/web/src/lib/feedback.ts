@@ -16,3 +16,25 @@ export const fetchFeedbackList = async (): Promise<Feedback[]> => {
 
   return res.json()
 }
+
+
+export type CreateFeedbackInput = {
+  title: string
+  message: string
+}
+
+export const createFeedback = async (
+  input: CreateFeedbackInput,
+): Promise<void> => {
+  const res = await fetch(`${API_BASE_URL}/feedback`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(input),
+  })
+
+  if (!res.ok) {
+    throw new Error("Failed to create feedback")
+  }
+}
