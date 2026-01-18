@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { trpc } from "../lib/trpc"
 
 export const FeedbackCreatePage = () => {
@@ -7,6 +8,7 @@ export const FeedbackCreatePage = () => {
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
 
+  const navigate = useNavigate()
   const utils = trpc.useUtils()
 
   const createFeedbackMutation = trpc.feedback.create.useMutation({
@@ -15,6 +17,7 @@ export const FeedbackCreatePage = () => {
       setSuccess(true)
       setTitle("")
       setMessage("")
+      navigate("/")
     },
     onError: () => {
       setError("Failed to create feedback")
