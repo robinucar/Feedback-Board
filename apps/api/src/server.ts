@@ -3,6 +3,7 @@ import { validateEnv } from "./env";
 import feedbackRouter from "./routes/feedback";
 import { errorHandler } from "./middleware/errorHandler";
 import { NotFoundError } from "./errors";
+import cors from "cors"
 
 validateEnv();
 
@@ -10,6 +11,12 @@ const app = express();
 
 // middleware
 app.use(express.json());
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+  }),
+);
 
 // routes
 app.get("/health", (_req, res) => {
