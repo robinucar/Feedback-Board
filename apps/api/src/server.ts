@@ -5,6 +5,11 @@ import { errorHandler } from "./middleware/errorHandler";
 import { NotFoundError } from "./errors";
 import cors from "cors"
 
+import * as trpcExpress from "@trpc/server/adapters/express"
+import { appRouter } from "./trpc/appRouter"
+import { createContext } from "./trpc/context"
+
+
 validateEnv();
 
 const app = express();
@@ -17,6 +22,14 @@ app.use(
     origin: "http://localhost:5173",
   }),
 );
+
+app.use(
+  "/trpc",
+  trpcExpress.createExpressMiddleware({
+    router: appRouter,
+    createContext,
+  }),
+)
 
 // routes
 app.get("/health", (_req, res) => {
