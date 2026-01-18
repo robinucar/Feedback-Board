@@ -1,7 +1,13 @@
 import { Router } from "express";
 import { z } from "zod";
-import { createFeedback, type CreateFeedbackInput, listFeedback, updateFeedbackById,
-  type UpdateFeedbackInput, deleteFeedbackById } from "db";
+import {
+  createFeedback,
+  deleteFeedbackById,
+  listFeedback,
+  updateFeedbackById,
+  type CreateFeedbackInput,
+  type UpdateFeedbackInput,
+} from "db";
 import { NotFoundError } from "../errors";
 
 const router = Router();
@@ -19,6 +25,10 @@ const UpdateFeedbackSchema: z.ZodType<UpdateFeedbackInput> = z
   .refine((data) => Object.keys(data).length > 0, {
     message: "At least one field must be provided",
   });
+
+const IdParamSchema = z.object({
+  id: z.string().uuid(),
+});
 
 router.post("/", async (req, res, next) => {
   try {
@@ -41,7 +51,7 @@ router.get("/", async (_req, res, next) => {
 
 router.patch("/:id", async (req, res, next) => {
   try {
-    const { id } = req.params;
+    const { id } = IdParamSchema.parse(req.params);
     const input = UpdateFeedbackSchema.parse(req.body);
 
     const updated = await updateFeedbackById(id, input);
@@ -58,7 +68,7 @@ router.patch("/:id", async (req, res, next) => {
 
 router.delete("/:id", async (req, res, next) => {
   try {
-    const { id } = req.params;
+    const { id } = IdParamSchema.parse(req.params);
 
     const deleted = await deleteFeedbackById(id);
 
