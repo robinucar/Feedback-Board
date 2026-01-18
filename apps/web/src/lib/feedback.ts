@@ -14,9 +14,14 @@ export const fetchFeedbackList = async (): Promise<Feedback[]> => {
     throw new Error("Failed to fetch feedback list")
   }
 
-  return res.json()
-}
+  const json = await res.json()
 
+  if (!Array.isArray(json.items)) {
+    throw new Error("Invalid feedback list response")
+  }
+
+  return json.items
+}
 
 export type CreateFeedbackInput = {
   title: string
