@@ -9,9 +9,17 @@
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r test",
     "db:generate": "cd packages/db && pnpm exec dotenv -e ../../.env -- pnpm exec drizzle-kit generate --config drizzle.config.ts",
-    "db:push": "cd packages/db && pnpm exec dotenv -e ../../.env -- pnpm exec drizzle-kit push --config drizzle.config.ts"
+    "db:push": "cd packages/db && pnpm exec dotenv -e ../../.env -- pnpm exec drizzle-kit push --config drizzle.config.ts",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "pnpm -r lint"
+    ]
   },
   "devDependencies": {
-    "dotenv-cli": "^11.0.0"
+    "dotenv-cli": "^11.0.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7"
   }
 }
