@@ -32,6 +32,22 @@ export const FeedbackListPage = () => {
             <p className="mt-2 text-xs text-white/50">
               {new Date(item.createdAt).toLocaleString()}
             </p>
+
+            <div className="mt-3 flex gap-2">
+              <button
+                type="button"
+                className="rounded-md border border-white/10 bg-white/5 px-3 py-1 text-xs hover:bg-white/10"
+              >
+                Edit
+              </button>
+
+              <button
+                type="button"
+                className="rounded-md border border-white/10 bg-white/5 px-3 py-1 text-xs hover:bg-white/10"
+              >
+                Delete
+              </button>
+            </div>
           </li>
         ))}
       </ul>
