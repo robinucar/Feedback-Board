@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { z } from "zod";
 import { createFeedback, type CreateFeedbackInput, listFeedback, updateFeedbackById,
-  type UpdateFeedbackInput } from "db";
+  type UpdateFeedbackInput, deleteFeedbackById } from "db";
 import { NotFoundError } from "../errors";
 
 const router = Router();
@@ -51,6 +51,22 @@ router.patch("/:id", async (req, res, next) => {
     }
 
     res.status(200).json(updated);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.delete("/:id", async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const deleted = await deleteFeedbackById(id);
+
+    if (!deleted) {
+      return next(new NotFoundError("Feedback not found"));
+    }
+
+    res.status(200).json(deleted);
   } catch (error) {
     next(error);
   }
