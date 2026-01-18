@@ -4,5 +4,7 @@ export {
   createFeedback,
   listFeedback,
   deleteFeedbackById,
+  updateFeedbackById,
   type CreateFeedbackInput,
+  type UpdateFeedbackInput,
 } from "./feedbackRepo";
