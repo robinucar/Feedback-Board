@@ -1,7 +1,21 @@
 import { trpc } from "../lib/trpc"
+import { useSearchParams } from "react-router-dom"
+import { Modal } from "../components/Modal/Modal"
+import { FeedbackForm } from "../components/FeedbackForm/FeedbackForm"
 
 export const FeedbackListPage = () => {
   const { data, isLoading, error } = trpc.feedback.list.useQuery()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const editingId = searchParams.get("edit")
+
+  const utils = trpc.useUtils()
+
+  const updateFeedbackMutation = trpc.feedback.update.useMutation({
+    onSuccess: () => {
+      utils.feedback.list.invalidate()
+      setSearchParams({})
+    },
+  })
 
   if (isLoading) {
     return <p className="text-white/70">Loading...</p>
@@ -12,6 +26,7 @@ export const FeedbackListPage = () => {
   }
 
   const items = data ?? []
+  const editingItem = items.find((item) => item.id === editingId)
 
   if (items.length === 0) {
     return <p className="text-white/70">No feedback yet.</p>
@@ -36,6 +51,7 @@ export const FeedbackListPage = () => {
             <div className="mt-3 flex gap-2">
               <button
                 type="button"
+                onClick={() => setSearchParams({ edit: item.id })}
                 className="rounded-md border border-white/10 bg-white/5 px-3 py-1 text-xs hover:bg-white/10"
               >
                 Edit
@@ -51,6 +67,36 @@ export const FeedbackListPage = () => {
           </li>
         ))}
       </ul>
+
+      {editingItem && (
+        <Modal
+          title={`Edit: ${editingItem.title}`}
+          onClose={() => setSearchParams({})}
+        >
+          {updateFeedbackMutation.error && (
+            <p className="mb-3 text-sm text-red-400">
+              {updateFeedbackMutation.error.message}
+            </p>
+          )}
+
+          <FeedbackForm
+            key={editingItem.id}
+            initialValues={{
+              title: editingItem.title,
+              message: editingItem.message,
+            }}
+            submitLabel="Update"
+            isSubmitting={updateFeedbackMutation.isPending}
+            onSubmit={(values) => {
+              updateFeedbackMutation.mutate({
+                id: editingItem.id,
+                title: values.title,
+                message: values.message,
+              })
+            }}
+          />
+        </Modal>
+      )}
     </div>
   )
 }
