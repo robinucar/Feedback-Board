@@ -22,7 +22,24 @@ export const FeedbackListPage = () => {
   })
 
   const deleteFeedbackMutation = trpc.feedback.delete.useMutation({
-    onSuccess: () => {
+    onMutate: async ({ id }) => {
+      await utils.feedback.list.cancel()
+
+      const previous = utils.feedback.list.getData()
+
+      utils.feedback.list.setData(undefined, (current) => {
+        const items = current ?? []
+        return items.filter((item) => item.id !== id)
+      })
+
+      return { previous }
+    },
+    onError: (_err, _vars, ctx) => {
+      if (ctx?.previous) {
+        utils.feedback.list.setData(undefined, ctx.previous)
+      }
+    },
+    onSettled: () => {
       utils.feedback.list.invalidate()
     },
   })
