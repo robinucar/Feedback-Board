@@ -1,12 +1,16 @@
+import { useState } from "react"
 import { trpc } from "../lib/trpc"
 import { useSearchParams } from "react-router-dom"
 import { Modal } from "../components/Modal/Modal"
 import { FeedbackForm } from "../components/FeedbackForm/FeedbackForm"
+import { ConfirmDialog } from "../components/ConfirmDialog/ConfirmDialog"
 
 export const FeedbackListPage = () => {
   const { data, isLoading, error } = trpc.feedback.list.useQuery()
   const [searchParams, setSearchParams] = useSearchParams()
   const editingId = searchParams.get("edit")
+
+  const [deleteId, setDeleteId] = useState<string | null>(null)
 
   const utils = trpc.useUtils()
 
@@ -14,6 +18,12 @@ export const FeedbackListPage = () => {
     onSuccess: () => {
       utils.feedback.list.invalidate()
       setSearchParams({})
+    },
+  })
+
+  const deleteFeedbackMutation = trpc.feedback.delete.useMutation({
+    onSuccess: () => {
+      utils.feedback.list.invalidate()
     },
   })
 
@@ -35,6 +45,12 @@ export const FeedbackListPage = () => {
   return (
     <div className="space-y-4">
       <h1 className="text-xl font-semibold">Feedback</h1>
+
+      {deleteFeedbackMutation.error && (
+        <p className="text-sm text-red-400">
+          {deleteFeedbackMutation.error.message}
+        </p>
+      )}
 
       <ul className="space-y-3">
         {items.map((item) => (
@@ -59,6 +75,7 @@ export const FeedbackListPage = () => {
 
               <button
                 type="button"
+                onClick={() => setDeleteId(item.id)}
                 className="rounded-md border border-white/10 bg-white/5 px-3 py-1 text-xs hover:bg-white/10"
               >
                 Delete
@@ -96,6 +113,27 @@ export const FeedbackListPage = () => {
             }}
           />
         </Modal>
+      )}
+
+      {deleteId && (
+        <ConfirmDialog
+          title="Delete feedback"
+          description="Are you sure you want to delete this feedback? This action cannot be undone."
+          confirmLabel="Delete"
+          cancelLabel="Cancel"
+          isConfirming={deleteFeedbackMutation.isPending}
+          onCancel={() => setDeleteId(null)}
+          onConfirm={() => {
+            deleteFeedbackMutation.mutate(
+              { id: deleteId },
+              {
+                onSuccess: () => {
+                  setDeleteId(null)
+                },
+              },
+            )
+          }}
+        />
       )}
     </div>
   )
