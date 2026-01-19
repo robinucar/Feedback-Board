@@ -37,7 +37,7 @@ As a user, I want to edit existing feedback so that I can correct or refine my i
 **Acceptance criteria**
 
 - Existing feedback can be selected for editing
-- The form is pre populated with the current feedback values
+- The form is pre-populated with the current feedback values
 - Changes are saved and reflected in the list
 
 ### Delete Feedback
@@ -99,7 +99,7 @@ The API exposes both REST endpoints and tRPC routers. This allows the backend to
 
 Contains the frontend React application.
 
-The UI communicates with the backend primarily through tRPC using shared type definitions, enabling end to end type safety. Client side routing is implemented to support multiple pages and future feature expansion.
+The UI communicates with the backend primarily through tRPC using shared type definitions, enabling end-to-end type safety. Client side routing is implemented to support multiple pages and future feature expansion.
 
 ### packages/db
 
@@ -174,7 +174,7 @@ The frontend is a React application responsible for rendering the user interface
 
 Users can navigate between multiple pages using client side routing. Feedback related actions such as listing, creating, updating, and deleting entries are triggered from the UI.
 
-The frontend communicates with the backend primarily through tRPC, using shared type definitions to ensure end to end type safety.
+The frontend communicates with the backend primarily through tRPC, using shared type definitions to ensure end-to-end type safety.
 
 ### API Layer
 
@@ -210,7 +210,7 @@ This section documents the key architectural and technical decisions made during
 
 The backend initially started with a traditional REST based CRUD implementation. This provided a simple and familiar baseline to establish the domain model, data flow, and API boundaries.
 
-Once the core functionality was in place, tRPC was introduced to improve type safety and developer experience between the frontend and backend. By sharing the API router types directly with the frontend, tRPC enables end to end type safety without additional schema duplication.
+Once the core functionality was in place, tRPC was introduced to improve type safety and developer experience between the frontend and backend. By sharing the API router types directly with the frontend, tRPC enables end-to-end type safety without additional schema duplication.
 
 Both approaches are intentionally kept in the codebase. REST endpoints remain useful as a clear and explicit reference, while tRPC is used as the primary communication layer for the frontend. This setup allows the system to support different interaction patterns without restructuring core logic.
 
