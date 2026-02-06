@@ -3,11 +3,12 @@
   "private": true,
   "packageManager": "pnpm@10.8.0",
   "scripts": {
-    "dev": "pnpm -r --stream dev",
+    "dev": "pnpm -r --parallel dev",
     "build": "pnpm -r build",
     "lint": "pnpm -r lint",
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r test",
+    "db:build": "pnpm --filter db build",
     "db:generate": "cd packages/db && pnpm exec dotenv -e ../../.env -- pnpm exec drizzle-kit generate --config drizzle.config.ts",
     "db:push": "cd packages/db && pnpm exec dotenv -e ../../.env -- pnpm exec drizzle-kit push --config drizzle.config.ts",
     "prepare": "husky"
