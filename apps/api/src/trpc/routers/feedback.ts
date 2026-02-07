@@ -8,6 +8,8 @@ import {
   deleteFeedbackById,
 } from "db"
 
+const feedbackLabelSchema = z.enum(["bug", "improvement", "feature", "other"])
+
 export const feedbackRouter = router({
   list: publicProcedure.query(async () => {
     return listFeedback()
@@ -18,6 +20,7 @@ export const feedbackRouter = router({
       z.object({
         title: z.string().min(1).max(200),
         message: z.string().min(1).max(2000),
+        label: feedbackLabelSchema.optional()
       }),
     )
     .mutation(async ({ input }) => {
@@ -31,9 +34,10 @@ export const feedbackRouter = router({
           id: z.string(),
           title: z.string().min(1).max(200).optional(),
           message: z.string().min(1).max(2000).optional(),
+          label: feedbackLabelSchema.optional()
         })
         .refine(
-          (data) => data.title !== undefined || data.message !== undefined,
+          (data) => data.title !== undefined || data.message !== undefined || data.label !== undefined,
           {
             message: "At least one field must be provided",
           },
@@ -43,6 +47,7 @@ export const feedbackRouter = router({
       const updated = await updateFeedbackById(input.id, {
         title: input.title,
         message: input.message,
+        label: input.label
       })
 
       if (!updated) {

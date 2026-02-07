@@ -15,8 +15,9 @@
   ],
   "scripts": {
     "dev": "tsc -p tsconfig.build.json -w",
-    "build": "tsc -p tsconfig.build.json",
+    "build": "pnpm run clean && tsc -p tsconfig.build.json",
     "clean": "rm -rf dist",
+    "typecheck": "tsc -p tsconfig.build.json --noEmit",
     "test": "echo \"no tests yet\""
   },
   "keywords": [],
