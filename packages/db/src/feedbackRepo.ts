@@ -2,14 +2,19 @@ import { desc, eq } from "drizzle-orm";
 import { db } from "./client";
 import { feedback } from "./schema";
 
+export type feedbackLabel = 'bug' | "improvement" | "feature" | "other";
+
+
 export type CreateFeedbackInput = {
   title: string;
   message: string;
+  label?: feedbackLabel | undefined;
 };
 
 export type UpdateFeedbackInput = {
   title?: string;
   message?: string;
+  label?: feedbackLabel;
 };
 
 export async function createFeedback(input: CreateFeedbackInput) {
@@ -18,6 +23,7 @@ export async function createFeedback(input: CreateFeedbackInput) {
     .values({
       title: input.title,
       message: input.message,
+      ...(input.label !== undefined ? {label: input.label} : {})
     })
     .returning();
 
@@ -34,6 +40,7 @@ export async function updateFeedbackById(id: string, input: UpdateFeedbackInput)
     .set({
       ...(input.title !== undefined ? { title: input.title } : {}),
       ...(input.message !== undefined ? { message: input.message } : {}),
+      ...(input.label !== undefined ? { label: input.label } : {}),
     })
     .where(eq(feedback.id, id))
     .returning();

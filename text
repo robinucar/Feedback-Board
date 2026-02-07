@@ -1,0 +1,9 @@
+Codebase Stability Confirmation: Verify the existing codebase's functionality, ensuring all Create, Read, Update, and Delete (CRUD) operations are working correctly.
+
+Feedback Labeling System: Implement a feature allowing users to create custom labels and assign one or more of these labels to any piece of feedback.
+
+Label-based Feedback Aggregation: Develop an aggregation query to calculate and display the total number of feedback submissions associated with each label.
+
+User Feedback Limit: Introduce a system to enforce a maximum number of feedback submissions per individual user.
+
+Stretch Goal - Time-Series Feedback Analysis: (Optional/Future) Visualize or report on feedback submission trends over time.

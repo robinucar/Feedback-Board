@@ -24,7 +24,7 @@ export const FeedbackCreatePage = () => {
       <h1 className="text-xl font-semibold">Create feedback</h1>
 
       <FeedbackForm
-        initialValues={{ title: "", message: "" }}
+        initialValues={{ title: "", message: "", label: "other" }}
         submitLabel="Create"
         isSubmitting={createFeedbackMutation.isPending}
         onSubmit={(values) => {
